@@ -12,7 +12,7 @@ export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <div className="flex flex-1 flex-col gap-4 pt-0">{children}</div>
+        <div className="flex flex-1 flex-col gap-4 pt-0 p-2">{children}</div>
       </SidebarInset>
     </SidebarProvider>
   );
