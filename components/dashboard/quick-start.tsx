@@ -2,6 +2,7 @@
 
 import { Icons } from "@/components/icons";
 import { Card, CardContent } from "@/components/ui/card";
+import PageHeader from "@/features/page-header";
 import { useRouter } from "next/navigation";
 
 interface QuickStartOption {
@@ -33,14 +34,10 @@ export const QuickStart = () => {
   const router = useRouter();
   return (
     <section className="py-8 px-4">
-      <header className="mb-8">
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">
-          Quick Start
-        </h2>
-        <p className="text-gray-600 text-base font-light italic">
-          Choose your preferred method to generate quiz sets.
-        </p>
-      </header>
+      <PageHeader
+        title="Quick Start"
+        description="Choose your preferred method to generate quiz sets."
+      />
 
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {quickStartOptions.map((option) => {

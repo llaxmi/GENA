@@ -4,6 +4,7 @@ import { DashboardLayout } from "@/components/dashboard";
 import { Icons } from "@/components/icons";
 import PrimaryButton from "@/components/primary-button";
 import { Card, CardContent } from "@/components/ui/card";
+import PageHeader from "@/features/page-header";
 import { useRouter } from "next/navigation";
 
 interface StatCard {
@@ -54,14 +55,11 @@ const Library = () => {
 
         <section className="py-4 sm:py-6 lg:py-8 px-2 sm:px-4">
           <div className="flex justify-between items-center">
-            <header className="mb-6 sm:mb-8">
-              <h2 className="text-lg sm:text-xl font-semibold text-gray-900 mb-2">
-                Your Statistics
-              </h2>
-              <p className="text-sm sm:text-base text-gray-600 font-light italic">
-                Overview of your quiz generation and usage.
-              </p>
-            </header>
+            <PageHeader
+              title="Your Statistics"
+              description="Overview of your quiz generation and usage."
+            />
+
             <PrimaryButton title="+ Generate" onClick={handleQuizGeneration} />
           </div>
 
