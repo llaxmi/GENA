@@ -7,6 +7,7 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-jakarta-sans: "Plus Jakarta Sans", sans-serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -152,18 +153,70 @@
   }
 }
 
+/* Plus Jakarta Sans Variable Font */
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  src: url("../assets/fonts/Plus_Jakarta_Sans/PlusJakartaSans-VariableFont_wght.ttf") format("truetype");
+  font-weight: 200 800;
+  font-style: normal;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Plus Jakarta Sans";
   src: url("../assets/fonts/Plus_Jakarta_Sans/PlusJakartaSans-Italic-VariableFont_wght.ttf") format("truetype");
+  font-weight: 200 800;
+  font-style: italic;
+  font-display: swap;
 }
+
+/* Sansation Font */
+@font-face {
+  font-family: "Sansation";
+  src: url("../assets/fonts/Sansation/Sansation-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sansation";
+  src: url("../assets/fonts/Sansation/Sansation-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sansation";
+  src: url("../assets/fonts/Sansation/Sansation-Italic.ttf") format("truetype");
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Sansation";
   src: url("../assets/fonts/Sansation/Sansation-BoldItalic.ttf") format("truetype");
-  src: url("../assets/fonts/Sansation/Sansation-Bold.ttf") format("truetype");
-  src: url("../assets/fonts/Sansation/Sansation-Italic.ttf") format("truetype");
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sansation";
   src: url("../assets/fonts/Sansation/Sansation-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sansation";
   src: url("../assets/fonts/Sansation/Sansation-LightItalic.ttf") format("truetype");
-  src: url("../assets/fonts/Sansation/Sansation-Regular.ttf") format("truetype");
+  font-weight: 300;
+  font-style: italic;
+  font-display: swap;
 }
 
 @theme {

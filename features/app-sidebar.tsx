@@ -43,7 +43,9 @@ const AppSidebar = () => {
   return (
     <Sidebar>
       <SidebarHeader>
-        <Image src="/gena.svg" alt="GENA" width={250} height={20} />
+        <Link href="/dashboard">
+          <Image src="/gena.svg" alt="GENA" width={250} height={20} />
+        </Link>
       </SidebarHeader>
       <Separator className="my-2" />
       <SidebarContent>

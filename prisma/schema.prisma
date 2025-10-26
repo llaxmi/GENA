@@ -24,7 +24,9 @@ model User {
   updatedAt     DateTime
   sessions      Session[]
   accounts      Account[]
+  quizzes       Quiz[]
 
+  @@index([email])
   @@unique([email])
   @@map("user")
 }
@@ -73,3 +75,33 @@ model Verification {
 
   @@map("verification")
 }
+
+
+model Quiz {
+  id String @id
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+  numberOfQuestions Int
+  difficultyLevel String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  questions Question[]
+
+  @@map("quiz")
+}
+
+model Question {
+  id String @id
+  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId String
+  question String
+  options String[]
+  correctAnswer String
+  order Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("question")
+}
+
