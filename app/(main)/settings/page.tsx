@@ -1,6 +1,5 @@
 "use client";
 
-import { DashboardLayout } from "@/components/dashboard/dashboard-layout";
 import { Button } from "@/components/ui/button";
 import {
   CardContent,
@@ -43,10 +42,7 @@ export default function SettingsPage() {
   };
 
   return (
-    <DashboardLayout
-      title="Settings"
-      subtitle="Manage your account preferences"
-    >
+    <div>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="max-w-4xl py-6 space-y-6"
@@ -138,6 +134,6 @@ export default function SettingsPage() {
           </div>
         </CardContent>
       </form>
-    </DashboardLayout>
+    </div>
   );
 }

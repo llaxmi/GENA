@@ -1,19 +1,19 @@
-"use client";
-
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import AppSidebar from "@/features/sidebar/app-sidebar";
 
-interface DashboardLayoutProps {
+export default function MainLayout({
+  children,
+}: {
   children: React.ReactNode;
-}
-
-export const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+}) {
   return (
     <SidebarProvider>
       <AppSidebar />
       <SidebarInset>
-        <div className="flex flex-1 flex-col gap-4 pt-0 p-2">{children}</div>
+        <div className="flex flex-1 flex-col gap-4 py-8 px-8 max-w-7xl w-full">
+          {children}
+        </div>
       </SidebarInset>
     </SidebarProvider>
   );
-};
+}

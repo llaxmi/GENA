@@ -57,9 +57,9 @@ const AppSidebar = () => {
                 <SidebarMenuButton asChild>
                   <Link
                     href={item.url}
-                    className={`flex items-center gap-4 p-4 font-secondary ${
+                    className={`flex items-center gap-4 p-4 font-secondary text-[16px] ${
                       isActive
-                        ? "font-bold text-foreground bg-accent rounded-none"
+                        ? "font-bold text-foreground bg-accent rounded-none border-r-4 border-blue-800"
                         : " "
                     }`}
                   >

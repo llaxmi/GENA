@@ -1,3 +1,5 @@
+import { Icons } from "./icons";
+
 interface HeroAction {
   text: string;
   href: string;
@@ -18,3 +20,16 @@ export interface HeroProps {
   description: string;
   actions: HeroAction[];
 }
+
+export type Tab = {
+  id: "text" | "document";
+  label: string;
+  icon: keyof typeof Icons;
+};
+
+export const TABS: Tab[] = [
+  { id: "text", label: "Text", icon: "textAa" },
+  { id: "document", label: "Document", icon: "upload" },
+];
+
+export const MAX_CHARACTERS = 25000;
