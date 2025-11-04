@@ -1,6 +1,5 @@
 "use client";
 
-import { signIn, signUp } from "@/lib/client";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,9 +10,11 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { signIn, signUp } from "@/lib/client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useId, useState } from "react";
+import { Icons } from "./icons";
 
 const AuthModal = ({
   showModal,
@@ -187,11 +188,15 @@ const AuthModal = ({
           )}
 
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading
-              ? "Loading..."
-              : activeTab === "signup"
-              ? "Sign up"
-              : "Sign in"}
+            {isLoading ? (
+              <>
+                <Icons.spinner className="w-4 h-4 mr-2 animate-spin" />
+              </>
+            ) : activeTab === "signup" ? (
+              "Sign Up"
+            ) : (
+              "Sign In"
+            )}
           </Button>
 
           <div className="text-center text-sm text-muted-foreground">

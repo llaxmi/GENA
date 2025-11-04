@@ -1,8 +1,9 @@
 "use client";
 
 import { Icons } from "@/components/icons";
-import PrimaryButton from "@/components/primary-button";
+import { Button } from "@/components/ui/button";
 import PageHeader from "@/features/page-header";
+import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { StatisticsCard } from "./statistics-card";
 
@@ -37,7 +38,10 @@ const LibraryStatistics = ({
           description="Overview of your quiz generation and usage."
         />
 
-        <PrimaryButton title="+ Generate" onClick={handleQuizGeneration} />
+        <Button onClick={handleQuizGeneration}>
+          <PlusIcon className="w-4 h-4" />
+          Generate
+        </Button>
       </div>
 
       <div className="grid gap-3 sm:gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">

@@ -83,6 +83,7 @@ export async function POST(
         score: totalCorrect,
         totalCorrectAnswers: totalCorrect,
         totalIncorrectAnswers: questions.length - totalCorrect,
+        status: "COMPLETED",
       },
     }),
   ]);

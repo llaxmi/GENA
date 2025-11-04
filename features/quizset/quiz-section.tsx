@@ -1,30 +1,27 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import type { Question } from "@/lib/generated/prisma";
-import { useRouter } from "next/navigation";
+import type { Question, Quiz } from "@/lib/generated/prisma";
+import { redirect, useRouter } from "next/navigation";
 import { useState } from "react";
-import { QuizSubmissionSummary } from "./constants";
-import { QuizCompletion } from "./quiz-completion";
 
-export const QuizSection = ({
-  questions,
-  quizId,
-}: {
+interface QuizSectionProps {
   questions: Question[];
   quizId: string;
-}) => {
+  quiz: Quiz;
+}
+
+export const QuizSection = ({ questions, quizId, quiz }: QuizSectionProps) => {
   const [current, setCurrent] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>(
     Array(questions.length).fill(null)
   );
-  const [isComplete, setIsComplete] = useState(false);
-  const [result, setResult] = useState<QuizSubmissionSummary | null>(null);
+
+  const isCompleted = quiz.status === "COMPLETED";
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
   const q = questions[current];
   const selected = answers[current];
-
   const onSelect = (idx: number) => {
     const newAnswers = [...answers];
     newAnswers[current] = idx;
@@ -63,9 +60,7 @@ export const QuizSection = ({
           "Failed to save quiz results";
         throw new Error(message);
       }
-
-      setResult(payload as QuizSubmissionSummary);
-      setIsComplete(true);
+      redirect(`/quiz/${quizId}/result`);
     } catch (error) {
       if (error instanceof Error) {
         console.error(error);
@@ -92,15 +87,11 @@ export const QuizSection = ({
     setCurrent(idx);
   };
 
-  const onRetake = () => {
-    router.replace(`/quiz/${quizId}?retake=true`);
-    setIsComplete(false);
-    setCurrent(0);
-    setAnswers(Array(questions.length).fill(null));
-    setResult(null);
-  };
-
   const answeredCount = answers.filter((a) => a !== null).length;
+
+  if (isCompleted) {
+    redirect(`/quiz/${quizId}/result`);
+  }
 
   if (!questions.length) {
     return (
@@ -112,24 +103,6 @@ export const QuizSection = ({
         >
           Generate Quiz
         </Button>
-      </div>
-    );
-  }
-
-  if (isComplete && result) {
-    return (
-      <QuizCompletion
-        questions={questions}
-        onRetake={onRetake}
-        result={result}
-      />
-    );
-  }
-
-  if (isComplete && !result) {
-    return (
-      <div className="p-6 text-center text-slate-700 dark:text-slate-200">
-        Saving your results...
       </div>
     );
   }
