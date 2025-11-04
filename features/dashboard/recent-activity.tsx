@@ -32,7 +32,7 @@ export const RecentActivity = ({ quizzes }: { quizzes: Quiz[] }) => {
         <TableBody>
           {quizzes.map((quiz) => (
             <TableRow key={quiz.id}>
-              <TableCell className="font-medium">{quiz.name}</TableCell>
+              <TableCell className="font-medium w-1/4">{quiz.name}</TableCell>
               <TableCell>{quiz.numberOfQuestions}</TableCell>
               <TableCell className="capitalize">
                 {quiz.difficultyLevel}

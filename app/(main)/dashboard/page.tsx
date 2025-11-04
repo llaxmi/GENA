@@ -12,7 +12,7 @@ const Dashboard = async () => {
     },
   });
   return (
-    <div>
+    <div className="space-y-8">
       {/* Quick Start Section */}
       <QuickStart />
 

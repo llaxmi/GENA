@@ -98,34 +98,9 @@ export default function GeneratePage() {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const result = await response.json();
-
-      if (
-        (result && result.questions) ||
-        (result?.object && result.object.questions)
-      ) {
-        const questions = result.questions || result.object?.questions;
-        console.log("Generated Questions from Document:", questions);
-        try {
-          localStorage.setItem(
-            "generatedQuizQuestions",
-            JSON.stringify({ questions })
-          );
-        } catch {}
-        window.location.href = "/quiz";
-        // Log each question with its options
-        result.questions.forEach((question: any, index: number) => {
-          console.log(`\nQuestion ${index + 1}: ${question.question}`);
-          console.log(`A) ${question.options.A}`);
-          console.log(`B) ${question.options.B}`);
-          console.log(`C) ${question.options.C}`);
-          console.log(`D) ${question.options.D}`);
-          console.log(`Correct Answer: ${question.correctAnswer}`);
-          console.log(`Explanation: ${question.explanation}`);
-        });
-      } else {
-        console.error("Failed to generate questions:", result.error);
-      }
+      const result = (await response.json()) as Quiz;
+      router.push(`/quiz/${result.id}`);
+      console.log(result);
     } catch (error) {
       console.error("Error processing document:", error);
     }
@@ -162,7 +137,7 @@ export default function GeneratePage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center w-full max-w-7xl mx-auto">
+    <div className=" flex items-center justify-center w-full max-w-7xl mx-auto">
       <Card className="w-full max-w-3xl bg-white rounded-2xl shadow-lg border border-gray-100">
         <CardContent className="p-6 space-y-4">
           {/* Tabs */}
