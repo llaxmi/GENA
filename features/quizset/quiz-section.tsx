@@ -3,7 +3,8 @@ import { Button } from "@/components/ui/button";
 import type { Question } from "@/lib/generated/prisma";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { QuizCompletion, type QuizSubmissionSummary } from "./quiz-completion";
+import { QuizSubmissionSummary } from "./constants";
+import { QuizCompletion } from "./quiz-completion";
 
 export const QuizSection = ({
   questions,
@@ -121,9 +122,6 @@ export const QuizSection = ({
         questions={questions}
         onRetake={onRetake}
         result={result}
-        explanation={
-          questions[current]?.explanation ?? "No explanation available"
-        }
       />
     );
   }
