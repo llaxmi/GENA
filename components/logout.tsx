@@ -10,10 +10,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { LogOut } from "lucide-react";
-import { useState } from "react";
 import { authClient } from "@/lib/client";
+import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 interface LogoutDialogProps {
   isOpen: boolean;
@@ -59,8 +59,7 @@ export default function LogoutDialog({ isOpen, onClose }: LogoutDialogProps) {
           <Button
             onClick={handleLogout}
             disabled={isLoading}
-            variant="outline"
-            className="flex-1 text-red-600 border border-red-600 hover:bg-red-50 hover:text-red-600"
+            className="flex-1"
           >
             {isLoading ? (
               <>

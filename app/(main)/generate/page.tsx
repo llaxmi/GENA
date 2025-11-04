@@ -137,8 +137,8 @@ export default function GeneratePage() {
   };
 
   return (
-    <div className=" flex items-center justify-center w-full max-w-7xl mx-auto">
-      <Card className="w-full max-w-3xl bg-white rounded-2xl shadow-lg border border-gray-100">
+    <div className="min-h-full flex items-center justify-center w-full max-w-7xl mx-auto">
+      <Card className=" w-full max-w-3xl bg-white rounded-2xl shadow-lg border border-gray-100">
         <CardContent className="p-6 space-y-4">
           {/* Tabs */}
           <div className="flex items-center justify-between flex-wrap gap-4">
@@ -197,12 +197,13 @@ export default function GeneratePage() {
                   <div className="text-right text-xs text-gray-400 font-mono">
                     {textForm.watch("content").length}/{MAX_CHARACTERS}
                   </div>
-                  <Button type="submit" className="w-full" disabled={loading}>
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-40 self-end"
+                  >
                     {loading ? (
-                      <GeneratingQuizModal
-                        open={loading}
-                        setOpen={setLoading}
-                      />
+                      <Icons.spinner className="w-4 h-4 animate-spin" />
                     ) : (
                       "Generate Quiz"
                     )}
@@ -244,6 +245,10 @@ export default function GeneratePage() {
           )}
         </CardContent>
       </Card>
+
+      {loading && (
+        <GeneratingQuizModal open={loading} setOpen={() => setLoading(false)} />
+      )}
     </div>
   );
 }
