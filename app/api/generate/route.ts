@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
     question: question.question,
     options: question.options,
     correctIndex: question.correctIndex,
+    explanation: question.explanation,
     order: index + 1,
   }));
   const quiz = await prisma.quiz.create({

@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import type { Question } from "@/lib/generated/prisma";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { QuizSubmissionSummary } from "./constants";
 import { QuizCompletion } from "./quiz-completion";
 
 export const QuizSection = ({
@@ -13,54 +14,93 @@ export const QuizSection = ({
   quizId: string;
 }) => {
   const [current, setCurrent] = useState(0);
-  const [selected, setSelected] = useState<number | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
   const [answers, setAnswers] = useState<(number | null)[]>(
     Array(questions.length).fill(null)
   );
   const [isComplete, setIsComplete] = useState(false);
+  const [result, setResult] = useState<QuizSubmissionSummary | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const router = useRouter();
   const q = questions[current];
+  const selected = answers[current];
 
   const onSelect = (idx: number) => {
-    if (showFeedback) return;
-    setSelected(idx);
+    const newAnswers = [...answers];
+    newAnswers[current] = idx;
+    setAnswers(newAnswers);
   };
 
-  const onSubmit = () => {
-    if (selected === null) return;
-    const newAnswers = [...answers];
-    newAnswers[current] = selected;
-    setAnswers(newAnswers);
-    setShowFeedback(true);
+  const submitQuiz = async () => {
+    const formattedAnswers = questions
+      .map((question, idx) => {
+        if (answers[idx] !== null) {
+          return {
+            questionId: question.id,
+            selectedIndex: answers[idx] as number,
+          };
+        }
+        return null;
+      })
+      .filter((answer) => answer !== null);
+
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch(`/api/quiz/${quizId}/submit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ answers: formattedAnswers }),
+      });
+
+      const payload = await response.json().catch(() => null);
+
+      if (!response.ok || !payload) {
+        const message =
+          (payload as { error?: string } | null)?.error ??
+          "Failed to save quiz results";
+        throw new Error(message);
+      }
+
+      setResult(payload as QuizSubmissionSummary);
+      setIsComplete(true);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error);
+        alert(error.message);
+      }
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const onNext = () => {
-    setShowFeedback(false);
-    setSelected(answers[current + 1] ?? null);
     if (current < questions.length - 1) {
       setCurrent((c) => c + 1);
-    } else {
-      setIsComplete(true);
     }
   };
-  const router = useRouter();
 
   const onPrev = () => {
-    setShowFeedback(false);
     if (current > 0) {
       setCurrent((c) => c - 1);
-      setSelected(answers[current - 1] ?? null);
     }
   };
+
+  const goToQuestion = (idx: number) => {
+    setCurrent(idx);
+  };
+
   const onRetake = () => {
     router.replace(`/quiz/${quizId}?retake=true`);
     setIsComplete(false);
     setCurrent(0);
-    setSelected(null);
     setAnswers(Array(questions.length).fill(null));
-    setShowFeedback(false);
+    setResult(null);
   };
+
+  const answeredCount = answers.filter((a) => a !== null).length;
 
   if (!questions.length) {
     return (
@@ -76,145 +116,131 @@ export const QuizSection = ({
     );
   }
 
-  if (isComplete) {
+  if (isComplete && result) {
     return (
       <QuizCompletion
         questions={questions}
         onRetake={onRetake}
-        selected={selected}
+        result={result}
       />
     );
   }
 
+  if (isComplete && !result) {
+    return (
+      <div className="p-6 text-center text-slate-700 dark:text-slate-200">
+        Saving your results...
+      </div>
+    );
+  }
+
   return (
-    <div className="max-w-xl mx-auto my-8 rounded-lg shadow-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-600 p-7">
-      <div className="mb-6 flex justify-between items-center text-xs text-slate-600 dark:text-slate-400">
-        <span>
-          Question {current + 1} / {questions.length}
-        </span>
-        {answers[current] !== null ? (
-          <span className="text-green-600">Answered</span>
-        ) : (
-          <span className="text-slate-400">Not answered</span>
-        )}
+    <div className="max-w-4xl mx-auto my-8">
+      {/* Question Navigation Bar */}
+      <div className="mb-6 p-4 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-600 shadow-lg">
+        <div className="flex justify-between items-center mb-3">
+          <h3 className="text-sm font-semibold text-slate-700 dark:text-slate-300">
+            Questions Progress
+          </h3>
+          <span className="text-xs text-slate-600 dark:text-slate-400">
+            {answeredCount} / {questions.length} answered
+          </span>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          {questions.map((_, idx) => {
+            const isAnswered = answers[idx] !== null;
+            const isCurrent = idx === current;
+            return (
+              <button
+                key={idx}
+                onClick={() => goToQuestion(idx)}
+                className={`w-10 h-10 rounded-lg font-semibold transition-all ${
+                  isCurrent
+                    ? "bg-blue-600 text-white border-2 border-blue-600 shadow-md"
+                    : isAnswered
+                    ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border-2 border-green-400 dark:border-green-600"
+                    : "bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border-2 border-slate-300 dark:border-slate-600 hover:border-slate-400 dark:hover:border-slate-500"
+                }`}
+                aria-label={`Go to question ${idx + 1}${
+                  isAnswered ? " (answered)" : " (not answered)"
+                }`}
+              >
+                {idx + 1}
+              </button>
+            );
+          })}
+        </div>
       </div>
-      <div className="mb-5 text-lg font-medium text-slate-900 dark:text-slate-100">
-        {q.question}
-      </div>
-      <div className="space-y-3 mb-6">
-        {q.options.map((option, idx) => {
-          let optionClass =
-            "w-full p-4 text-left border-2 rounded-lg cursor-pointer transition-colors flex items-center justify-between";
-          let icon = null;
 
-          if (showFeedback) {
-            if (idx === q.correctIndex) {
-              optionClass +=
-                " bg-green-100/50 dark:bg-green-500/20 text-green-700 dark:text-green-300 border-green-400 shadow";
-              icon = (
-                <svg
-                  className="w-5 h-5 text-green-500"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              );
-            } else if (idx === selected) {
-              optionClass +=
-                " bg-red-100/50 dark:bg-red-500/20 text-red-700 dark:text-red-300 border-red-400";
-              icon = (
-                <svg
-                  className="w-5 h-5 text-red-500"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              );
-            } else {
-              optionClass += " opacity-60";
-            }
-          } else {
-            if (idx === selected) {
-              optionClass +=
-                " bg-blue-100/80 dark:bg-blue-400/30 border-blue-400 text-blue-700 dark:text-blue-200";
-            } else {
-              optionClass +=
-                " hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-600";
-            }
-          }
-
-          return (
-            <button
-              key={option}
-              type="button"
-              className={optionClass}
-              onClick={() => onSelect(idx)}
-              disabled={showFeedback}
-              aria-pressed={selected === idx}
-            >
-              <span className="text-base">{option}</span>
-              {icon}
-            </button>
-          );
-        })}
-      </div>
-      {showFeedback && (
-        <div
-          className={`mb-6 p-4 rounded-lg border border-slate-200 dark:border-slate-600 ${
-            selected === q.correctIndex
-              ? "bg-green-100 dark:bg-green-900/50 border-green-300 text-green-700"
-              : "bg-red-100 dark:bg-red-900/50 border-red-300 text-red-700"
-          }`}
-        >
-          {selected === q.correctIndex ? (
-            <span className="font-medium">Correct! 🎉</span>
-          ) : (
-            <span>
-              The correct answer is:{" "}
-              <span className="font-semibold">{q.options[q.correctIndex]}</span>
+      {/* Question Card */}
+      <div className="rounded-lg shadow-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-600 p-7">
+        <div className="mb-6 flex justify-between items-center">
+          <span className="text-xs text-slate-600 dark:text-slate-400">
+            Question {current + 1} of {questions.length}
+          </span>
+          {answers[current] !== null && (
+            <span className="text-xs px-3 py-1 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 border border-green-400 dark:border-green-600">
+              Answered
             </span>
           )}
         </div>
-      )}
-      <div className="flex justify-between items-center gap-2 mt-4">
-        <button
-          onClick={onPrev}
-          disabled={current === 0}
-          className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 transition"
-        >
-          Previous
-        </button>
-        {!showFeedback && (
+
+        <div className="mb-5 text-lg font-medium text-slate-900 dark:text-slate-100">
+          {q.question}
+        </div>
+
+        <div className="space-y-3 mb-6">
+          {q.options.map((option, idx) => {
+            const isSelected = idx === selected;
+            const optionClass = `w-full p-4 text-left border-2 rounded-lg cursor-pointer transition-colors ${
+              isSelected
+                ? "bg-blue-100/80 dark:bg-blue-400/30 border-blue-400 text-blue-700 dark:text-blue-200"
+                : "hover:bg-slate-100 dark:hover:bg-slate-700 border-slate-200 dark:border-slate-600 text-slate-700 dark:text-slate-300"
+            }`;
+
+            return (
+              <button
+                key={option}
+                type="button"
+                className={optionClass}
+                onClick={() => onSelect(idx)}
+                aria-pressed={isSelected}
+              >
+                <span className="text-base">{option}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Navigation and Submit Buttons */}
+        <div className="flex justify-between items-center gap-3 mt-6 pt-6 border-t border-slate-200 dark:border-slate-600">
           <button
-            onClick={onSubmit}
-            disabled={selected === null}
-            className="ml-auto px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition disabled:opacity-50"
+            onClick={onPrev}
+            disabled={current === 0}
+            className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 disabled:opacity-40 disabled:cursor-not-allowed transition"
           >
-            Submit
+            Previous
           </button>
-        )}
-        {showFeedback && (
-          <button
-            onClick={onNext}
-            className="ml-auto px-4 py-2 rounded-lg bg-blue-600 text-white font-semibold hover:bg-blue-700 transition"
-          >
-            {current === questions.length - 1 ? "Finish" : "Next"}
-          </button>
-        )}
+
+          <div className="flex gap-3">
+            {current < questions.length - 1 ? (
+              <button
+                onClick={onNext}
+                className="px-4 py-2 rounded-lg border border-slate-300 dark:border-slate-600 bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition"
+              >
+                Next
+              </button>
+            ) : (
+              <button
+                onClick={submitQuiz}
+                disabled={isSubmitting || answeredCount === 0}
+                className="px-6 py-2 rounded-lg bg-green-600 text-white font-semibold hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isSubmitting ? "Submitting..." : "Submit Quiz"}
+              </button>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
