@@ -35,7 +35,7 @@ export async function POST(
 
   const questions = await prisma.question.findMany({
     where: { quizId },
-    select: { id: true, correctIndex: true },
+    select: { id: true, correctIndex: true, order: true },
   });
 
   if (!questions.length) {
@@ -52,20 +52,30 @@ export async function POST(
     if (isCorrect) totalCorrect++;
 
     return {
+      questionId: ans.questionId,
+      selectedIndex: ans.selectedIndex,
+      isCorrect: isCorrect ?? false,
+      correctIndex: question?.correctIndex ?? 0,
+      order: question?.order ?? 0,
+    };
+  });
+
+  const dbAnswerRecords = answers.map((ans) => {
+    const question = questions.find((q) => q.id === ans.questionId);
+    const isCorrect = question && ans.selectedIndex === question.correctIndex;
+
+    return {
       quizId,
       questionId: ans.questionId,
       selectedIndex: ans.selectedIndex,
-      isCorrect,
+      isCorrect: isCorrect ?? false,
     };
   });
 
   await prisma.$transaction([
     prisma.quizAnswer.deleteMany({ where: { quizId } }),
     prisma.quizAnswer.createMany({
-      data: answerRecords.map((ans) => ({
-        ...ans,
-        isCorrect: ans.isCorrect ?? false,
-      })),
+      data: dbAnswerRecords,
     }),
     prisma.quiz.update({
       where: { id: quizId },
