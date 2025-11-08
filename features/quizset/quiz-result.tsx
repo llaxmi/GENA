@@ -57,9 +57,7 @@ export default function QuizResult({ quizAnswer }: QuizResultProps) {
   const quizId = quizAnswer[0]?.quizId || "";
 
   const onRetake = () => {
-    if (quizId) {
-      router.push(`/quiz/${quizId}?retake=true`);
-    }
+    router.push(`/quiz/${quizId}?retake=true`);
   };
 
   return (

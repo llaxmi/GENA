@@ -13,12 +13,12 @@ export default async function ResultPage({
     where: { id: quizId },
   });
 
-  if (quiz?.status !== "COMPLETED") {
-    return redirect(`/quiz/${quizId}`);
-  }
-
   if (!quiz) {
     return notFound();
+  }
+
+  if (quiz.status !== "COMPLETED") {
+    return redirect(`/quiz/${quizId}`);
   }
 
   const questionAnswer = await prisma.quizAnswer.findMany({
