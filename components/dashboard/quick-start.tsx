@@ -36,7 +36,7 @@ export const QuickStart = () => {
         description="Choose your preferred way to get started creating quiz sets."
       />
 
-      <div className="flex md:flex-row gap-4 w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full">
         {quickStartOptions.map((option, idx) => {
           const IconComponent = Icons[option.icon];
           return (
@@ -44,31 +44,32 @@ export const QuickStart = () => {
               key={option.title}
               className={`
                 group cursor-pointer transition-all duration-300 relative
-                bg-white  shadow-lg hover:shadow-2xl 
-                hover:-translate-y-1 hover:border-slate-400
-                overflow-hidden px-0 md:px-3 
+                bg-card border border-border shadow-sm hover:shadow-lg
+                hover:-translate-y-0.5 hover:border-primary/20 py-4
+                overflow-hidden
               `}
               onClick={() => {
                 router.push("/generate");
               }}
             >
-              <CardContent className="flex gap-4">
+              <CardContent className="flex gap-4 px-4 py-0">
                 <div
                   className={`
                     flex items-center justify-center 
-                    w-12 h-12 rounded-2xl
+                    w-14 h-14 rounded-xl
                     ${option.iconBgColor} 
-                    shadow-md group-hover:shadow-lg
-                    transition-all duration-300 group-hover:scale-105
+                    shadow-sm group-hover:shadow-md
+                    transition-all duration-300 group-hover:scale-110
+                    flex-shrink-0
                   `}
                 >
-                  <IconComponent className="w-8 h-8 text-gray-700 drop-shadow-sm" />
+                  <IconComponent className="w-7 h-7 text-gray-800" />
                 </div>
-                <div className="flex flex-col items-start justify-center">
-                  <h3 className="text-lg font-semibold text-gray-900 text-center group-hover:text-primary transition-colors">
+                <div className="flex flex-col justify-center gap-1 flex-1">
+                  <h3 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
                     {option.title}
                   </h3>
-                  <p className="text-gray-500 text-sm text-center leading-relaxed">
+                  <p className="text-sm text-muted-foreground leading-relaxed">
                     {option.description}
                   </p>
                 </div>

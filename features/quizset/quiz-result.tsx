@@ -7,13 +7,7 @@ import {
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import { Question, QuizAnswer } from "@/lib/generated/prisma";
-import {
-  CheckCircle2,
-  CircleCheck,
-  Home,
-  RefreshCcw,
-  XCircle,
-} from "lucide-react";
+import { CheckCircle2, Home, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getPerformanceBg, getPerformanceText } from "./constants";
 
@@ -62,6 +56,14 @@ export default function QuizResult({ quizAnswer }: QuizResultProps) {
 
   return (
     <div className="p-6 md:p-10 max-w-4xl mx-auto min-h-[85vh]">
+      <Button
+        variant="outline"
+        className="w-full sm:w-auto gap-2  cursor-pointer text-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:text-white my-4 hover:from-blue-700 hover:to-indigo-700 font-semibold rounded-xl px-8 py-4 shadow transition-all duration-150"
+        onClick={() => router.push("/dashboard")}
+      >
+        <Home className="w-5 h-5" />
+        Dashboard
+      </Button>
       {/* Banner */}
       <div
         className={`rounded-3xl flex flex-col items-center justify-center p-8 mb-7 shadow-lg text-center relative overflow-hidden ${performanceBg}`}
@@ -90,8 +92,7 @@ export default function QuizResult({ quizAnswer }: QuizResultProps) {
           </div>
           <div className="flex flex-row gap-4 mt-2 items-center">
             <span className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-100/80 text-green-700 font-medium">
-              <CheckCircle2 className="w-5 h-5" />
-              Correct:{" "}
+              <CheckCircle2 className="w-5 h-5" /> Correct:{" "}
               {typeof totalCorrect === "number" && !isNaN(totalCorrect)
                 ? totalCorrect
                 : 0}
@@ -155,7 +156,7 @@ export default function QuizResult({ quizAnswer }: QuizResultProps) {
             return (
               <div key={question.id}>
                 <div className="flex items-center w-full gap-3">
-                  <span className="text-lg font-bold text-slate-900 dark:text-slate-100 flex-1">
+                  <span className="text-base font-bold text-slate-900 dark:text-slate-100 flex-1">
                     <span className="inline-block mr-1 rounded-lg px-2 py-0.5 bg-indigo-100 text-indigo-700 font-semibold">
                       {typeof question.order === "number" ? question.order : ""}
                     </span>
@@ -173,18 +174,14 @@ export default function QuizResult({ quizAnswer }: QuizResultProps) {
                 </div>
                 <div className="flex flex-col md:flex-col text-xs md:items-start flex-wrap gap-3 mt-2 w-full">
                   <div className="flex items-center gap-2">
-                    <span className="w-full font-medium flex-1 text-slate-700 dark:text-slate-300">
+                    <span className="w-full text-sm font-medium flex-1 text-slate-700 ">
                       Your answer:
                     </span>
 
                     {hasAnswer && selectedOption !== null ? (
                       <span
                         className={`rounded-lg px-2 py-1 text-xs md:text-sm font-semibold 
-                          ${
-                            isCorrect
-                              ? "bg-green-200/80 text-green-800 "
-                              : "bg-red-200/80 text-red-800"
-                          }
+                          ${isCorrect && "bg-green-200/80 text-green-800 "}
                         `}
                       >
                         {selectedOption}
@@ -198,7 +195,7 @@ export default function QuizResult({ quizAnswer }: QuizResultProps) {
                   {hasAnswer && !isCorrect && (
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-slate-700 dark:text-slate-300">
-                        <CircleCheck className="w-5 h-5" color="green" />{" "}
+                        Correct answer:{" "}
                       </span>
                       <span className="rounded-lg px-3 py-1 text-xs md:text-sm font-semibold bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-200 shadow">
                         {correctOption}
@@ -225,24 +222,6 @@ export default function QuizResult({ quizAnswer }: QuizResultProps) {
           })}
       </div>
 
-      <div className="mt-10 flex flex-col sm:flex-row gap-4 sm:gap-7 w-full justify-center items-center">
-        <Button
-          variant="outline"
-          className="w-full sm:w-auto flex gap-2 items-center cursor-pointer text-lg bg-gradient-to-r from-green-600 to-emerald-600 text-white hover:text-white hover:from-green-700 hover:to-emerald-700 font-semibold rounded-xl px-8 py-4 shadow transition-all duration-150"
-          onClick={() => router.push("/dashboard")}
-        >
-          <Home className="w-5 h-5" />
-          Dashboard
-        </Button>
-        <Button
-          variant="outline"
-          className="w-full sm:w-auto flex gap-2 items-center cursor-pointer text-lg bg-gradient-to-r from-blue-700 to-indigo-700 text-white hover:text-white hover:from-blue-800 hover:to-indigo-800 font-semibold rounded-xl px-8 py-4 shadow transition-all duration-150"
-          onClick={onRetake}
-        >
-          <RefreshCcw className="w-5 h-5" />
-          Retake Quiz
-        </Button>
-      </div>
       <div className="w-full text-center text-xs opacity-60 mt-8 mb-2">
         Thank you for participating! Keep learning and growing.
       </div>

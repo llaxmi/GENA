@@ -18,11 +18,33 @@ export default async function LibraryPage() {
     { totalCorrectAnswers: 0, totalIncorrectAnswers: 0 }
   );
 
+  // Fetch all quiz answers with questions for the user
+  const quizAnswers = await prisma.quizAnswer.findMany({
+    where: {
+      quiz: {
+        userId: user?.id,
+      },
+    },
+    include: {
+      question: true,
+      quiz: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
   return (
     <LibraryStatistics
       totalCorrectAnswers={totalCorrectAnswers}
       totalIncorrectAnswers={totalIncorrectAnswers}
       allQuestions={totalCorrectAnswers + totalIncorrectAnswers}
+      quizAnswers={quizAnswers}
     />
   );
 }

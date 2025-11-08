@@ -9,6 +9,8 @@ interface StatisticsCardProps {
   icon: keyof typeof Icons;
   className: string;
   bgColor: string;
+  onClick?: () => void;
+  isActive?: boolean;
 }
 
 export const StatisticsCard = ({
@@ -18,33 +20,36 @@ export const StatisticsCard = ({
   icon,
   className,
   bgColor,
+  onClick,
+  isActive = false,
 }: StatisticsCardProps) => {
   const IconComponent = Icons[icon];
   return (
     <Card
+      onClick={onClick}
       className={cn(
-        "group border-[0.1px] border-l-4 bg-white shadow-sm hover:shadow-xl ",
+        "group border border-border shadow-sm hover:shadow-lg  p-x-2 py-0 transition-all duration-300 hover:-translate-y-0.5 bg-card",
+        onClick && "cursor-pointer",
+        isActive && "ring-2 ring-blue-800 ring-offset-2",
         className
       )}
     >
-      <CardContent>
-        <div className="flex gap-2 sm:gap-4 items-start">
+      <CardContent className="p-4">
+        <div className="flex gap-3 items-start">
           <div
             className={cn(
-              "w-10 h-10 sm:w-12 sm:h-12 rounded-lg shadow-md flex-shrink-0 flex items-center justify-center",
+              "w-12 h-12 rounded-xl shadow-sm flex-shrink-0 flex items-center justify-center transition-transform duration-300 group-hover:scale-110",
               bgColor
             )}
           >
-            <IconComponent className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700" />
+            <IconComponent className="w-6 h-6 text-foreground" />
           </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-sm sm:text-base lg:text-lg font-semibold text-gray-800 transition-colors mb-1">
+          <div className="flex-1 min-w-0 space-y-2">
+            <h3 className="text-sm font-medium text-foreground uppercase tracking-wide">
               {title}
             </h3>
-            <p className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1">
-              {value}
-            </p>
-            <p className="text-xs sm:text-sm text-gray-500 leading-relaxed">
+            <p className="text-3xl font-bold text-foreground">{value}</p>
+            <p className="text-xs text-muted-foreground leading-relaxed">
               {description}
             </p>
           </div>
