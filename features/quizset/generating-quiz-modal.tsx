@@ -5,8 +5,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Loader2Icon } from "lucide-react";
 import { useEffect, useState } from "react";
-import { InfinityLoader } from "./generating-loader";
 
 const generatingText = [
   "Generating",
@@ -47,10 +47,7 @@ export default function GeneratingQuizModal({
         </DialogHeader>
         <div className="flex flex-col items-center justify-center mt-2">
           <div className="flex min-h-[20px] w-min items-center justify-center bg-background">
-            <InfinityLoader
-              size={50}
-              className="[&>svg>path:last-child]:stroke-blue-700"
-            />
+            <Loader2Icon color="blue" className="w-10 h-10 animate-spin" />
           </div>
         </div>
         <DialogDescription className="text-center text-sm">

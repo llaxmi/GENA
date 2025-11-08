@@ -81,7 +81,17 @@ export default function GeneratePage() {
       }
 
       const result = (await response.json()) as Quiz;
-      toast.success("Quiz generated successfully!");
+      toast.success("Quiz generated successfully!", {
+        style: {
+          border: "1px solid green",
+          padding: "16px",
+          color: "green",
+        },
+        iconTheme: {
+          primary: "green",
+          secondary: "white",
+        },
+      });
       router.push(`/quiz/${result.id}`);
     } catch (error) {
       console.error("Error submitting form:", error);

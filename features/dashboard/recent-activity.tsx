@@ -47,7 +47,7 @@ export const RecentActivity = ({ quizzes }: { quizzes: Quiz[] }) => {
             <TableRow className="hover:bg-transparent">
               <TableHead className="font-semibold">Name</TableHead>
               <TableHead className="font-semibold">Questions</TableHead>
-              <TableHead className="font-semibold">Difficulty</TableHead>
+              <TableHead className="font-semibold">Level</TableHead>
               <TableHead className="text-right font-semibold">
                 Created At
               </TableHead>
