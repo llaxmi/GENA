@@ -64,7 +64,7 @@ const SettingsPage = async () => {
             Profile Information
           </CardTitle>
           <CardDescription>
-            View your account information. Name and email cannot be edited.
+            View your account information.
           </CardDescription>
         </CardHeader>
         <CardContent>

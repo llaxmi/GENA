@@ -13,11 +13,13 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
 enum QuizStatus {
   INITIAL
   COMPLETED
   PAUSED
 }
+
 model User {
   id            String    @id
   name          String
@@ -80,56 +82,54 @@ model Verification {
   @@map("verification")
 }
 
-
 model Quiz {
-  id String @id @default(uuid())
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  userId String
-  numberOfQuestions Int
-  difficultyLevel String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  
-  score Int @default(0)
-  totalCorrectAnswers Int @default(0)
-  totalIncorrectAnswers Int @default(0)
-  
-  name String
-  questions Question[]
-  answers QuizAnswer[]
-  status QuizStatus @default(INITIAL)
+  id                    String       @id @default(uuid())
+  user                  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId                String
+  numberOfQuestions     Int
+  difficultyLevel       String
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+  score                 Int          @default(0)
+  totalCorrectAnswers   Int          @default(0)
+  totalIncorrectAnswers Int          @default(0)
+  name                  String
+  questions             Question[]
+  answers               QuizAnswer[]
+  status                QuizStatus   @default(INITIAL)
 
   @@map("quiz")
 }
 
 model Question {
-  id String @id @default(uuid())
-  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  quizId String
-  question String
-  options String[]
+  id           String       @id @default(uuid())
+  quiz         Quiz         @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId       String
+  question     String
+  options      String[]
   correctIndex Int
-  order Int
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  answers QuizAnswer[]
-  explanation String?
+  order        Int
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  answers      QuizAnswer[]
+  explanation  String?
 
   @@map("question")
 }
 
 model QuizAnswer {
-  id String @id @default(uuid())
-  quiz Quiz @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  quizId String
-  question Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  questionId String
+  id            String   @id @default(uuid())
+  quiz          Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  quizId        String
+  question      Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  questionId    String
   selectedIndex Int?
-  isCorrect Boolean
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  isCorrect     Boolean
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 
   @@unique([quizId, questionId])
   @@map("quiz_answer")
 }
+
 
