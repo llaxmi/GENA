@@ -37,7 +37,6 @@ export default function SettingsPage() {
   const watchedValues = watch();
 
   const onSubmit = (data: SettingsFormData) => {
-    // You can replace this with your API call or logic
     console.log("Form submitted:", data);
     setIsEditing(false);
   };
@@ -59,6 +58,7 @@ export default function SettingsPage() {
           </CardTitle>
           <CardDescription>Update your personal information</CardDescription>
         </CardHeader>
+
         <CardContent className="space-y-4">
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
@@ -66,6 +66,7 @@ export default function SettingsPage() {
                 {watchedValues.userName?.charAt(0) ?? "J"}
               </span>
             </div>
+
             <div className="flex-1 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Full Name */}
@@ -84,6 +85,7 @@ export default function SettingsPage() {
                     </p>
                   )}
                 </div>
+
                 {/* Email */}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
@@ -108,24 +110,24 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
+
           {/* Action Buttons */}
           <div className="flex justify-end gap-4">
             <Button
               type="button"
               variant="outline"
-              className={`bg-white text-red-500 border-red-500  hover:text-red-500 ${
+              className={`bg-white text-red-500 border-red-500 hover:text-red-500 ${
                 isEditing ? "opacity-100" : "opacity-0 pointer-events-none"
               }`}
               onClick={() => setIsEditing(false)}
             >
               Cancel
             </Button>
+
             {isEditing ? (
-              <>
-                <Button type="submit" disabled={!isDirty} className="w-16">
-                  Save
-                </Button>
-              </>
+              <Button type="submit" disabled={!isDirty} className="w-16">
+                Save
+              </Button>
             ) : (
               <Button
                 type="button"
