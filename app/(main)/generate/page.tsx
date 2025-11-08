@@ -17,6 +17,7 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm, UseFormReturn } from "react-hook-form";
+import pdfToText from "react-pdftotext";
 
 export default function GeneratePage() {
   const [activeTab, setActiveTab] = useState<Tab["id"]>("text");
@@ -43,17 +44,15 @@ export default function GeneratePage() {
   const handleTextSubmit = async (data: TextQuizSchemaType) => {
     setLoading(true);
     try {
+      const formDate = new FormData();
+      formDate.append("type", "text");
+      formDate.append("name", data.name);
+      formDate.append("content", data.content);
+      formDate.append("numQuestions", data.numQuestions.toString());
+      formDate.append("difficulty", data.difficulty);
       const response = await fetch("/api/generate", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: data.name,
-          content: data.content,
-          numQuestions: data.numQuestions,
-          difficulty: data.difficulty,
-        }),
+        body: formDate,
       });
 
       if (!response.ok) {
@@ -78,20 +77,19 @@ export default function GeneratePage() {
     }
     setLoading(true);
     try {
+      const textContent = await pdfToText(data.file);
+
       // Read file content
-      const content = await readFileContent(data.file);
+      const formDate = new FormData();
+      formDate.append("type", "text");
+      formDate.append("content", textContent);
+      formDate.append("name", data.name ?? data.file.name.split(".")[0]);
+      formDate.append("numQuestions", data.numQuestions.toString());
+      formDate.append("difficulty", data.difficulty);
 
       const response = await fetch("/api/generate", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          name: data.name,
-          content: content,
-          numQuestions: data.numQuestions,
-          difficulty: data.difficulty,
-        }),
+        body: formDate,
       });
 
       if (!response.ok) {
@@ -107,33 +105,6 @@ export default function GeneratePage() {
     setLoading(false);
     docForm.reset();
     textForm.reset();
-  };
-
-  // Helper function to read file content
-  const readFileContent = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        resolve((e.target?.result as string) || "");
-      };
-      reader.onerror = () => reject(new Error("Failed to read file"));
-
-      if (
-        file.type === "text/plain" ||
-        file.name.toLowerCase().endsWith(".txt")
-      ) {
-        reader.readAsText(file);
-      } else if (
-        file.type === "application/pdf" ||
-        file.name.toLowerCase().endsWith(".pdf")
-      ) {
-        // For PDF files, we'll read as text for now (basic implementation)
-        // In a real app, you'd use a PDF parsing library
-        reader.readAsText(file);
-      } else {
-        reject(new Error("Unsupported file type"));
-      }
-    });
   };
 
   return (
