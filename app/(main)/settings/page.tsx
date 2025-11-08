@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { getUser } from "@/lib/session";
 import { Edit3 } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -28,15 +29,16 @@ export default function SettingsPage() {
     formState: { errors, isDirty },
   } = useForm<SettingsFormData>({
     defaultValues: {
-      userName: "Laxmi",
-      email: "laxmi@gmail.com",
+      userName: "",
+      email: "",
     },
   });
 
   const watchedValues = watch();
 
-  const onSubmit = (data: SettingsFormData) => {
-    // You can replace this with your API call or logic
+  const onSubmit = async (data: SettingsFormData) => {
+    const user = await getUser();
+    console.log("user", user);
     console.log("Form submitted:", data);
     setIsEditing(false);
   };
@@ -59,7 +61,7 @@ export default function SettingsPage() {
           <div className="flex items-center space-x-4">
             <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
               <span className="text-blue-600 text-xl font-semibold">
-                {watchedValues.userName?.charAt(0) ?? "J"}
+                {watchedValues.userName?.charAt(0) ?? "J"}{" "}
               </span>
             </div>
             <div className="flex-1 space-y-4">

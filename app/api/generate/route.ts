@@ -1,24 +1,8 @@
 import { auth, prisma } from "@/lib/auth";
-import { generateObject } from "ai";
+import quizGenerator from "@/lib/generate";
+import { quizSchema } from "@/schema/quiz.schema";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { ollama } from "ollama-ai-provider-v2";
-import { z } from "zod";
-
-const quizSchema = z.object({
-  questions: z
-    .array(
-      z.object({
-        question: z.string().describe("The question text"),
-        options: z.array(z.string()).describe("The options for the question"),
-        correctIndex: z.number().describe("The index of the correct answer"),
-        explanation: z
-          .string()
-          .describe("The explanation for the correct answer"),
-      })
-    )
-    .describe("The quiz questions"),
-});
 
 const quizPrompt = (
   numQuestions: number,
@@ -38,34 +22,41 @@ Requirements:
 `;
 
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  const body = await request.formData();
+
+  const type = body.get("type");
+  const name = body.get("name");
+  const content = body.get("content");
+  const numQuestions = body.get("numQuestions");
+  const difficulty = body.get("difficulty");
+  const file = body.get("file");
+
+  console.log(content);
 
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) {
     return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
   }
 
-  const { name, content, numQuestions, difficulty } = body;
-  console.log(name, content, numQuestions, difficulty);
-  if (!name || !content || !numQuestions || !difficulty) {
+  const parseResult = quizSchema.safeParse({
+    type,
+    name,
+    numQuestions,
+    difficulty,
+    content,
+    file,
+  });
+
+  if (!parseResult.success) {
+    console.log(parseResult.error.flatten());
     return NextResponse.json(
-      {
-        error:
-          "Missing required fields: name, content, numQuestions, difficulty",
-      },
+      { error: parseResult.error.flatten() },
       { status: 400 }
     );
   }
 
-  const result = await generateObject({
-    model: ollama.chat("llama3.1:8b"),
-    prompt: quizPrompt(numQuestions, content, difficulty),
-    temperature: 0.5,
-    schemaName: "quiz",
-    schemaDescription: "A quiz with questions and answers",
-    schema: quizSchema,
-  });
-  const questions = result.object.questions.map((question, index) => ({
+  const result = await quizGenerator.generateQuiz(parseResult.data);
+  const questions = result.map((question, index) => ({
     question: question.question,
     options: question.options,
     correctIndex: question.correctIndex,
@@ -74,10 +65,10 @@ export async function POST(request: NextRequest) {
   }));
   const quiz = await prisma.quiz.create({
     data: {
-      name: name,
+      name: parseResult.data.name || "Untitled Quiz",
       userId: session.user?.id,
-      numberOfQuestions: numQuestions,
-      difficultyLevel: difficulty,
+      numberOfQuestions: parseResult.data.numQuestions,
+      difficultyLevel: parseResult.data.difficulty,
       questions: {
         createMany: {
           data: questions,

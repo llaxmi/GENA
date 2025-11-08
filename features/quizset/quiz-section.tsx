@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import type { Question, Quiz } from "@/lib/generated/prisma";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 interface QuizSectionProps {
@@ -60,7 +60,7 @@ export const QuizSection = ({ questions, quizId, quiz }: QuizSectionProps) => {
           "Failed to save quiz results";
         throw new Error(message);
       }
-      redirect(`/quiz/${quizId}/result`);
+      router.push(`/quiz/${quizId}/result`);
     } catch (error) {
       if (error instanceof Error) {
         console.error(error);
@@ -90,7 +90,7 @@ export const QuizSection = ({ questions, quizId, quiz }: QuizSectionProps) => {
   const answeredCount = answers.filter((a) => a !== null).length;
 
   if (isCompleted) {
-    redirect(`/quiz/${quizId}/result`);
+    router.push(`/quiz/${quizId}/result`);
   }
 
   if (!questions.length) {
