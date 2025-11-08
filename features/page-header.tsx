@@ -5,10 +5,14 @@ interface PageHeaderProps {
 
 const PageHeader = ({ title, description }: PageHeaderProps) => {
   return (
-    <header className="mb-6">
-      <h2 className="text-xl font-semibold text-gray-900 mb-1">{title}</h2>
+    <header className="my-6">
+      <h2 className="text-base sm:text-2xl font-bold text-foreground mb-2 tracking-tight">
+        {title}
+      </h2>
       {description && (
-        <p className="text-gray-600 text-base font-light">{description}</p>
+        <p className="text-muted-foreground text-xs sm:text-base leading-relaxed max-w-2xl">
+          {description}
+        </p>
       )}
     </header>
   );

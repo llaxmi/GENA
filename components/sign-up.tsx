@@ -78,24 +78,26 @@ const AuthModal = ({
 
   return (
     <Dialog open={showModal} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-md">
         {/* Logo and Tab Header */}
-        <div className="flex flex-col items-center font-secondary">
-          <Image
-            src="/favicon.ico"
-            alt="GENA"
-            width={100}
-            height={100}
-            className="w-30 h-30"
-          />
+        <div className="flex flex-col items-center">
+          <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+            <Image
+              src="/favicon.ico"
+              alt="GENA"
+              width={40}
+              height={40}
+              className="w-10 h-10"
+            />
+          </div>
 
           {/* Tabs */}
-          <div className="mt-4 flex w-full justify-center gap-6 border-b border-border pb-2 text-sm font-medium">
+          <div className="mt-2 flex w-full justify-center gap-6 border-b border-border pb-2 text-sm font-medium">
             <button
-              className={`pb-1 ${
+              className={`pb-2 px-2 transition-colors ${
                 activeTab === "signup"
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-muted-foreground"
+                  ? "border-b-2 border-primary text-primary font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
               onClick={() => {
                 setActiveTab("signup");
@@ -106,10 +108,10 @@ const AuthModal = ({
               Sign Up
             </button>
             <button
-              className={`pb-1 ${
+              className={`pb-2 px-2 transition-colors ${
                 activeTab === "signin"
-                  ? "border-b-2 border-primary text-primary"
-                  : "text-muted-foreground"
+                  ? "border-b-2 border-primary text-primary font-semibold"
+                  : "text-muted-foreground hover:text-foreground"
               }`}
               onClick={() => {
                 setActiveTab("signin");
@@ -123,22 +125,22 @@ const AuthModal = ({
         </div>
 
         {/* Form Section */}
-        <DialogHeader className="mt-2 text-center">
-          <DialogTitle>
+        <DialogHeader className="mt-4 text-center">
+          <DialogTitle className="text-xl">
             {activeTab === "signup" ? "Sign up to GENA" : "Welcome back"}
           </DialogTitle>
-          <DialogDescription>
+          <DialogDescription className="mt-1">
             {activeTab === "signup"
               ? "We just need a few details to get you started."
               : "Enter your credentials to access your account."}
           </DialogDescription>
         </DialogHeader>
 
-        <form className="space-y-5" onSubmit={handleSubmit}>
+        <form className="space-y-4 mt-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
             {activeTab === "signup" && (
               <div className="space-y-2">
-                <Label htmlFor={`${id}-name`}>Full name</Label>
+                <Label htmlFor={`${id}-name`} className="text-sm font-medium">Full name</Label>
                 <Input
                   id={`${id}-name`}
                   placeholder="Your full name"
@@ -146,12 +148,13 @@ const AuthModal = ({
                   required
                   value={formData.name}
                   onChange={(e) => handleInputChange("name", e.target.value)}
+                  className="w-full"
                 />
               </div>
             )}
 
             <div className="space-y-2">
-              <Label htmlFor={`${id}-email`}>Email</Label>
+              <Label htmlFor={`${id}-email`} className="text-sm font-medium">Email</Label>
               <Input
                 id={`${id}-email`}
                 placeholder="hi@mail.com"
@@ -159,11 +162,12 @@ const AuthModal = ({
                 required
                 value={formData.email}
                 onChange={(e) => handleInputChange("email", e.target.value)}
+                className="w-full"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor={`${id}-password`}>Password</Label>
+              <Label htmlFor={`${id}-password`} className="text-sm font-medium">Password</Label>
               <Input
                 id={`${id}-password`}
                 placeholder="Enter your password"
@@ -171,18 +175,19 @@ const AuthModal = ({
                 required
                 value={formData.password}
                 onChange={(e) => handleInputChange("password", e.target.value)}
+                className="w-full"
               />
             </div>
           </div>
 
           {error && (
-            <div className="text-sm text-red-600 bg-red-50 p-3 rounded-md">
+            <div className="text-sm text-destructive bg-destructive/10 border border-destructive/20 p-3 rounded-md">
               {error}
             </div>
           )}
 
           {success && (
-            <div className="text-sm text-green-600 bg-green-50 p-3 rounded-md">
+            <div className="text-sm text-green-700 dark:text-green-400 bg-green-500/10 border border-green-500/20 p-3 rounded-md">
               {success}
             </div>
           )}
@@ -191,6 +196,7 @@ const AuthModal = ({
             {isLoading ? (
               <>
                 <Icons.spinner className="w-4 h-4 mr-2 animate-spin" />
+                {activeTab === "signup" ? "Signing up..." : "Signing in..."}
               </>
             ) : activeTab === "signup" ? (
               "Sign Up"
@@ -199,7 +205,7 @@ const AuthModal = ({
             )}
           </Button>
 
-          <div className="text-center text-sm text-muted-foreground">
+          <div className="text-center text-sm text-muted-foreground pt-2">
             {activeTab === "signup" ? (
               <>
                 Already have an account?{" "}
@@ -210,7 +216,7 @@ const AuthModal = ({
                     setError("");
                     setFormData({ name: "", email: "", password: "" });
                   }}
-                  className="text-primary"
+                  className="text-primary hover:underline font-medium"
                 >
                   Sign in
                 </button>
@@ -225,7 +231,7 @@ const AuthModal = ({
                     setError("");
                     setFormData({ name: "", email: "", password: "" });
                   }}
-                  className="text-primary"
+                  className="text-primary hover:underline font-medium"
                 >
                   Sign up
                 </button>

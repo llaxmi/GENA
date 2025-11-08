@@ -22,15 +22,15 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, onRemove }) => {
   }, [file]);
 
   return (
-    <div className="flex items-center gap-3 bg-gray-50 rounded-lg p-2 shadow-sm border border-gray-200 mb-2 animate-fade-in">
+    <div className="flex items-center gap-3 bg-card rounded-lg p-3 shadow-sm border border-border animate-fade-in">
       {previewUrl ? (
         <img
           src={previewUrl}
           alt="Preview"
-          className="w-16 h-16 object-cover rounded-md border border-gray-200"
+          className="w-12 h-12 object-cover rounded-md border border-border"
         />
       ) : (
-        <div className="w-16 h-16 flex items-center justify-center bg-gray-200 rounded-md text-gray-500 text-xl">
+        <div className="w-12 h-12 flex items-center justify-center bg-muted rounded-md text-muted-foreground text-xl">
           <span role="img" aria-label="file">
             {file.type === "text/plain" ||
             file.name.toLowerCase().endsWith(".txt")
@@ -42,13 +42,16 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, onRemove }) => {
           </span>
         </div>
       )}
-      <div className="flex-1 truncate">
-        <div className="font-medium text-gray-800 truncate">{file.name}</div>
+      <div className="flex-1 truncate min-w-0">
+        <div className="font-medium text-foreground truncate text-sm">{file.name}</div>
+        <div className="text-xs text-muted-foreground">
+          {(file.size / 1024 / 1024).toFixed(2)} MB
+        </div>
       </div>
       <button
         type="button"
         onClick={onRemove}
-        className="ml-2 px-2 py-1 text-xs flex items-center gap-1 bg-red-50 text-red-600 rounded hover:bg-red-100 transition border border-red-200 shadow-sm"
+        className="ml-2 px-2 py-1.5 text-xs flex items-center gap-1 bg-destructive/10 text-destructive rounded-md hover:bg-destructive/20 transition border border-destructive/20"
         aria-label="Remove file"
       >
         <svg
@@ -77,17 +80,19 @@ interface ToastProps {
 
 const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => (
   <div
-    className={`fixed top-6 right-6 z-50 px-4 py-3 rounded shadow-lg text-white animate-fade-in ${
-      type === "success" ? "bg-green-600" : "bg-red-600"
+    className={`fixed top-6 right-6 z-50 px-4 py-3 rounded-lg shadow-lg border animate-fade-in ${
+      type === "success" 
+        ? "bg-green-500/10 dark:bg-green-500/20 border-green-500/20 text-green-700 dark:text-green-400" 
+        : "bg-destructive/10 dark:bg-destructive/20 border-destructive/20 text-destructive"
     }`}
     role="alert"
   >
     <div className="flex items-center gap-2">
-      {type === "success" ? "✅" : "❌"}
-      <span>{message}</span>
+      <span>{type === "success" ? "✅" : "❌"}</span>
+      <span className="text-sm font-medium">{message}</span>
       <button
         onClick={onClose}
-        className="ml-3 text-white/80 hover:text-white text-lg"
+        className="ml-3 opacity-70 hover:opacity-100 text-lg transition-opacity"
         aria-label="Close"
       >
         ×
@@ -280,8 +285,8 @@ export const UploadFile = ({
   };
 
   return (
-    <div className="flex flex-col  px-4 w-full">
-      <div className="w-full animate-fade-in space-y-8">
+    <div className="flex flex-col w-full">
+      <div className="w-full animate-fade-in space-y-6">
         <input
           ref={fileInputRef}
           type="file"
@@ -292,25 +297,27 @@ export const UploadFile = ({
           accept=".txt,.pdf,text/plain,application/pdf"
         />
         <div
-          className={`w-full flex flex-col border-2 border-dashed rounded-xl transition-all duration-200 cursor-pointer mt-4 ${
+          className={`w-full flex flex-col border-2 border-dashed rounded-lg transition-all duration-200 cursor-pointer mt-4 ${
             isDragging
-              ? "border-blue-500 bg-blue-50"
-              : "border-gray-300 bg-gray-50 hover:border-blue-400"
+              ? "border-primary bg-primary/5"
+              : "border-border bg-muted/30 hover:border-primary/50 hover:bg-muted/50"
           }`}
-          style={{ minHeight: 120 }}
+          style={{ minHeight: 140 }}
           onClick={handleButtonClick}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
         >
-          <div className="flex flex-col items-center py-6">
-            <span className="text-4xl mb-2">📁</span>
-            <span className="text-gray-700 font-medium">
+          <div className="flex flex-col items-center justify-center py-8 px-4">
+            <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mb-3">
+              <span className="text-2xl">📁</span>
+            </div>
+            <span className="text-foreground font-medium text-sm mb-1">
               Drag & drop files here, or{" "}
-              <span className="text-blue-600 underline">browse</span>
+              <span className="text-primary underline">browse</span>
             </span>
-            <span className="text-xs text-gray-400 mt-1">
-              (PDF, TXT etc. up to 5MB each)
+            <span className="text-xs text-muted-foreground">
+              PDF, TXT files up to 5MB each
             </span>
           </div>
         </div>

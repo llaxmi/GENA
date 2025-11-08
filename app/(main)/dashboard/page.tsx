@@ -16,8 +16,6 @@ const Dashboard = async () => {
       {/* Quick Start Section */}
       <QuickStart />
 
-      <Separator />
-
       {/* Recent Activity Section */}
       <RecentActivity quizzes={quizzes} />
     </div>

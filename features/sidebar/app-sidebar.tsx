@@ -41,15 +41,21 @@ const AppSidebar = () => {
   const pathname = usePathname();
 
   return (
-    <Sidebar>
-      <SidebarHeader>
-        <Link href="/dashboard">
-          <Image src="/gena.svg" alt="GENA" width={250} height={20} />
+    <Sidebar className="border-r border-border/50">
+      <SidebarHeader className="p-4">
+        <Link href="/dashboard" className="transition-opacity hover:opacity-80">
+          <Image
+            src="/gena.svg"
+            alt="GENA"
+            width={200}
+            height={20}
+            className="h-auto"
+          />
         </Link>
       </SidebarHeader>
       <Separator className="my-2" />
-      <SidebarContent>
-        <SidebarMenu>
+      <SidebarContent className="px-2">
+        <SidebarMenu className="space-y-1">
           {menuItems.map((item) => {
             const isActive = pathname === item.url;
             return (
@@ -57,13 +63,15 @@ const AppSidebar = () => {
                 <SidebarMenuButton asChild>
                   <Link
                     href={item.url}
-                    className={`flex items-center gap-4 p-4 font-secondary text-[16px] ${
+                    className={`flex items-center gap-3 px-4 py-3 rounded-lg font-medium text-sm transition-all duration-200 ${
                       isActive
-                        ? "font-bold text-foreground bg-accent rounded-none border-r-4 border-blue-800"
-                        : " "
+                        ? "bg-primary/10 border-l-4 rounded-l-none border-blue-800 text-primary font-semibold shadow-sm"
+                        : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
                     }`}
                   >
-                    <item.icon className="h-4 w-4" />
+                    <item.icon
+                      className={`h-5 w-5 ${isActive ? "text-primary" : ""}`}
+                    />
                     <span>{item.title}</span>
                   </Link>
                 </SidebarMenuButton>
@@ -73,14 +81,15 @@ const AppSidebar = () => {
         </SidebarMenu>
       </SidebarContent>
 
-      <SidebarFooter>
+      <SidebarFooter className="px-2 pb-4">
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton onClick={() => setShowLogoutModal(true)}>
-              <div className="flex items-center gap-3 px-4 py-2 text-muted-foreground hover:text-foreground">
-                <LogOut className="h-4 w-4" />
-                <span>Logout</span>
-              </div>
+            <SidebarMenuButton
+              onClick={() => setShowLogoutModal(true)}
+              className="w-full justify-start px-4 py-3 rounded-lg text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200"
+            >
+              <LogOut className="h-5 w-5 mr-3" />
+              <span className="font-medium">Logout</span>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

@@ -1,141 +1,113 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
 import {
+  Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import PageHeader from "@/features/page-header";
 import { getUser } from "@/lib/session";
-import { Edit3 } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { User } from "lucide-react";
 
-type SettingsFormData = {
-  userName: string;
-  email: string;
-};
+function formatDate(dateString?: string | Date) {
+  if (!dateString) return "Unknown";
+  try {
+    const date =
+      typeof dateString === "string" ? new Date(dateString) : dateString;
+    return date.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  } catch {
+    return "Unknown";
+  }
+}
 
-export default function SettingsPage() {
-  const [isEditing, setIsEditing] = useState(false);
+export default async function SettingsPage() {
+  const user = await getUser();
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    formState: { errors, isDirty },
-  } = useForm<SettingsFormData>({
-    defaultValues: {
-      userName: "",
-      email: "",
-    },
-  });
+  if (!user) {
+    return (
+      <div className="max-w-3xl">
+        <PageHeader
+          title="Settings"
+          description="Manage your account settings and preferences."
+        />
+        <Card className="border border-border shadow-sm">
+          <CardContent className="pt-6">
+            <p className="text-muted-foreground">
+              Unable to load user information.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
-  const watchedValues = watch();
-
-  const onSubmit = async (data: SettingsFormData) => {
-    const user = await getUser();
-    console.log("user", user);
-    console.log("Form submitted:", data);
-    setIsEditing(false);
-  };
+  const userInitial =
+    user.name?.charAt(0)?.toUpperCase() ??
+    user.email?.charAt(0)?.toUpperCase() ??
+    "U";
 
   return (
-    <div>
-      <form
-        onSubmit={handleSubmit(onSubmit)}
-        className="max-w-4xl py-6 space-y-6"
-      >
-        {/* Profile Section */}
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Edit3 className="h-5 w-5" />
+    <div className="max-w-3xl">
+      <PageHeader
+        title="Settings"
+        description="Manage your account settings and preferences."
+      />
+      <Card className="border border-border shadow-sm">
+        <CardHeader className="pb-4">
+          <CardTitle className="flex items-center gap-2 text-xl">
+            <User className="h-5 w-5 text-primary" />
             Profile Information
           </CardTitle>
-          <CardDescription>Update your personal information</CardDescription>
+          <CardDescription>
+            View your account information. Name and email cannot be edited.
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <div className="flex items-center space-x-4">
-            <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center">
-              <span className="text-blue-600 text-xl font-semibold">
-                {watchedValues.userName?.charAt(0) ?? "J"}{" "}
-              </span>
-            </div>
-            <div className="flex-1 space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {/* Full Name */}
+        <CardContent>
+          <div className="space-y-6">
+            <div className="flex items-start space-x-6">
+              <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 border-2 border-primary/20">
+                <span className="text-primary text-2xl font-bold">
+                  {userInitial}
+                </span>
+              </div>
+              <div className="flex-1 space-y-4">
+                {/* Name Field */}
                 <div className="space-y-2">
-                  <Label htmlFor="username">Full Name</Label>
-                  <Input
-                    id="username"
-                    disabled={!isEditing}
-                    {...register("userName", {
-                      required: "Full name is required",
-                    })}
-                  />
-                  {errors.userName && (
-                    <p className="text-xs text-red-500">
-                      {errors.userName.message}
-                    </p>
-                  )}
+                  <Label htmlFor="name" className="text-sm font-medium">
+                    Full Name
+                  </Label>
+                  <div className="px-3 py-2 rounded-md border border-border bg-muted/50 text-sm">
+                    {user.name || "Not provided"}
+                  </div>
                 </div>
-                {/* Email */}
+                {/* Email Field */}
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    disabled={!isEditing}
-                    {...register("email", {
-                      required: "Email is required",
-                      pattern: {
-                        value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                        message: "Invalid email address",
-                      },
-                    })}
-                  />
-                  {errors.email && (
-                    <p className="text-xs text-red-500">
-                      {errors.email.message}
-                    </p>
-                  )}
+                  <Label htmlFor="email" className="text-sm font-medium">
+                    Email Address
+                  </Label>
+                  <div className="px-3 py-2 rounded-md border border-border bg-muted/50 text-sm">
+                    {user.email || "Not provided"}
+                  </div>
+                </div>
+                {/* Account Created Field */}
+                <div className="space-y-2">
+                  <Label htmlFor="created" className="text-sm font-medium">
+                    Member Since{" "}
+                  </Label>
+                  <p className="px-3 py-2 rounded-md border border-border bg-muted/50 text-sm">
+                    {user.createdAt ? formatDate(user.createdAt) : "Unknown"}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
-          {/* Action Buttons */}
-          <div className="flex justify-end gap-4">
-            <Button
-              type="button"
-              variant="outline"
-              className={`bg-white text-red-500 border-red-500  hover:text-red-500 ${
-                isEditing ? "opacity-100" : "opacity-0 pointer-events-none"
-              }`}
-              onClick={() => setIsEditing(false)}
-            >
-              Cancel
-            </Button>
-            {isEditing ? (
-              <>
-                <Button type="submit" disabled={!isDirty} className="w-16">
-                  Save
-                </Button>
-              </>
-            ) : (
-              <Button
-                type="button"
-                onClick={() => setIsEditing(true)}
-                className="w-16"
-              >
-                Edit
-              </Button>
-            )}
-          </div>
         </CardContent>
-      </form>
+      </Card>
     </div>
   );
 }

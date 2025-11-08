@@ -25,39 +25,45 @@ export const QuizOptions = ({
   form: UseFormReturn<TextQuizSchemaType | DocumentQuizSchemaType>;
 }) => {
   return (
-    <div>
-      <Label className="font-semibold text-gray-900 mb-4 text-lg">
-        Quiz Preferences
-      </Label>
-      <div className="flex space-y-4 flex-col">
+    <div className="space-y-6">
+      <div>
+        <Label className="text-base font-semibold text-foreground mb-1 block">
+          Quiz Preferences
+        </Label>
+        <p className="text-sm text-muted-foreground">
+          Configure your quiz settings
+        </p>
+      </div>
+      <div className="space-y-4">
         <FormField
           control={form.control}
           name="name"
           render={({ field }) => (
             <div className="space-y-2">
-              <FormLabel>Name</FormLabel>
+              <FormLabel className="text-sm font-medium">Quiz Name</FormLabel>
               <Input
                 placeholder="Enter a name for your quiz set"
                 {...field}
                 disabled={form.formState.isSubmitting}
+                className="w-full"
               />
             </div>
           )}
         />
-        <div className="flex gap-2 justify-between">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <FormField
             control={form.control}
             name="numQuestions"
             render={({ field }) => (
-              <div className="space-y-2 flex-1">
-                <FormLabel>Number of Questions</FormLabel>
+              <div className="space-y-2">
+                <FormLabel className="text-sm font-medium">Number of Questions</FormLabel>
                 <Select
                   value={field.value.toString()}
                   onValueChange={field.onChange}
                   disabled={form.formState.isSubmitting}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a number of questions" />
+                    <SelectValue placeholder="Select number" />
                   </SelectTrigger>
                   <SelectContent>
                     {QUESTION_COUNTS.map((n: QuestionCount) => (
@@ -75,15 +81,15 @@ export const QuizOptions = ({
             control={form.control}
             name="difficulty"
             render={({ field }) => (
-              <div className="space-y-2 flex-1">
-                <FormLabel>Difficulty Level</FormLabel>
+              <div className="space-y-2">
+                <FormLabel className="text-sm font-medium">Difficulty Level</FormLabel>
                 <Select
                   value={field.value}
                   onValueChange={field.onChange}
                   disabled={form.formState.isSubmitting}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select a difficulty level" />
+                    <SelectValue placeholder="Select difficulty" />
                   </SelectTrigger>
                   <SelectContent>
                     {DIFFICULTY_LEVELS.map((d) => (

@@ -54,7 +54,7 @@ export default function Home() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
         >
-          <div className="w-full max-w-md mx-8 p-8 backdrop-blur-xl bg-white/70 border border-white/20 rounded-3xl shadow-2xl ">
+          <div className="w-full max-w-md mx-8 p-8 sm:p-10 backdrop-blur-xl bg-white/80 dark:bg-gray-900/80 border border-border/50 rounded-2xl shadow-xl">
             <motion.div
               className="text-center mb-8"
               initial={{ opacity: 0, y: 20 }}
@@ -62,7 +62,7 @@ export default function Home() {
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <motion.h2
-                className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-600 bg-clip-text text-transparent mb-3"
+                className="text-3xl font-bold text-foreground mb-3"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.5 }}
@@ -70,7 +70,7 @@ export default function Home() {
                 Welcome to GENA
               </motion.h2>
               <motion.p
-                className="text-gray-600"
+                className="text-muted-foreground"
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: 0.6 }}
@@ -80,7 +80,7 @@ export default function Home() {
             </motion.div>
 
             <motion.div
-              className="space-y-4"
+              className="space-y-3"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7 }}
@@ -88,12 +88,13 @@ export default function Home() {
               {/* Enhanced primary button */}
               <Button
                 onClick={handleGetStartedClick}
-                className="relative w-full h-14 text-lg font-semibold bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white rounded-xl transition-all duration-300 shadow-lg "
+                className="relative w-full h-12 text-base font-semibold rounded-lg transition-all duration-300"
               >
                 <motion.span
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.8 }}
+                  className="flex items-center justify-center gap-2"
                 >
                   ✨ Sign up for free
                 </motion.span>
@@ -102,7 +103,7 @@ export default function Home() {
                 <Button
                   onClick={handleSignInClick}
                   variant="outline"
-                  className="w-full h-14 text-lg font-semibold border-2 border-blue-200 text-blue-700 hover:text-blue-800 hover:bg-blue-50 hover:border-blue-300 rounded-xl transition-all duration-300 backdrop-blur-sm"
+                  className="w-full h-12 text-base font-semibold rounded-lg transition-all duration-300"
                 >
                   Sign in
                 </Button>
@@ -111,13 +112,13 @@ export default function Home() {
 
             {/* Enhanced features highlight */}
             <motion.div
-              className="mt-8 text-center"
+              className="mt-6 text-center"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 0.9 }}
             >
-              <div className="inline-flex items-center space-x-2 px-4 py-2 bg-green-50 rounded-full border border-green-200 ">
-                <span className="text-green-600  text-sm font-medium">
+              <div className="inline-flex items-center space-x-2 px-4 py-2 bg-green-500/10 dark:bg-green-500/20 rounded-full border border-green-500/20">
+                <span className="text-green-700 dark:text-green-400 text-sm font-medium">
                   ✨ Free forever plan available
                 </span>
               </div>
@@ -125,20 +126,20 @@ export default function Home() {
 
             {/* Trust indicators */}
             <motion.div
-              className="mt-6 flex justify-center space-x-6 opacity-80"
+              className="mt-6 flex justify-center space-x-6"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
+              animate={{ opacity: 1 }}
               transition={{ duration: 0.6, delay: 1.0 }}
             >
-              <div className="flex items-center space-x-1 text-sm text-gray-500">
+              <div className="flex items-center space-x-1.5 text-sm text-muted-foreground">
                 <span>🔒</span>
                 <span>Secure</span>
               </div>
-              <div className="flex items-center space-x-1 text-sm text-gray-500">
+              <div className="flex items-center space-x-1.5 text-sm text-muted-foreground">
                 <span>⚡</span>
                 <span>Fast</span>
               </div>
-              <div className="flex items-center space-x-1 text-sm text-gray-500">
+              <div className="flex items-center space-x-1.5 text-sm text-muted-foreground">
                 <span>🚀</span>
                 <span>Modern</span>
               </div>
