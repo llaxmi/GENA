@@ -77,7 +77,6 @@ export default function GeneratePage() {
           errorData.message ||
           `Failed to generate quiz. Please try again.`;
         toast.error(errorMessage);
-        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
       const result = (await response.json()) as Quiz;

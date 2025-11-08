@@ -180,7 +180,7 @@ export const QuizSection = ({ questions, quizId, quiz }: QuizSectionProps) => {
 
             return (
               <button
-                key={option}
+                key={idx}
                 type="button"
                 className={optionClass}
                 onClick={() => onSelect(idx)}
