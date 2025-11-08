@@ -56,6 +56,7 @@ export default function SettingsPage() {
             <Edit3 className="h-5 w-5" />
             Profile Information
           </CardTitle>
+          {/* Removed the "Name and email cannot be edited" text */}
           <CardDescription>Update your personal information</CardDescription>
         </CardHeader>
 
@@ -66,7 +67,6 @@ export default function SettingsPage() {
                 {watchedValues.userName?.charAt(0) ?? "J"}
               </span>
             </div>
-
             <div className="flex-1 space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 {/* Full Name */}
@@ -85,7 +85,6 @@ export default function SettingsPage() {
                     </p>
                   )}
                 </div>
-
                 {/* Email */}
                 <div className="space-y-2">
                   <Label htmlFor="email">Email Address</Label>
@@ -123,7 +122,6 @@ export default function SettingsPage() {
             >
               Cancel
             </Button>
-
             {isEditing ? (
               <Button type="submit" disabled={!isDirty} className="w-16">
                 Save
