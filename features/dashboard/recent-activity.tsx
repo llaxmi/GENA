@@ -24,15 +24,6 @@ function formatDate(date: Date) {
   });
 }
 
-function getScoreVariant(score: number, total: number) {
-  if (total === 0) return "bg-slate-200 text-slate-500";
-  const ratio = score / total;
-  if (ratio === 1) return "bg-green-100 text-green-800 border-green-400";
-  if (ratio > 0.7) return "bg-blue-100 text-blue-800 border-blue-400";
-  if (ratio > 0.4) return "bg-yellow-100 text-yellow-900 border-yellow-400";
-  return "bg-red-100 text-red-800 border-red-400";
-}
-
 export const RecentActivity = ({ quizzes }: { quizzes: Quiz[] }) => {
   const router = useRouter();
   return (
@@ -47,7 +38,7 @@ export const RecentActivity = ({ quizzes }: { quizzes: Quiz[] }) => {
             <TableRow className="hover:bg-transparent">
               <TableHead className="font-semibold">Name</TableHead>
               <TableHead className="font-semibold">Questions</TableHead>
-              <TableHead className="font-semibold">Level</TableHead>
+              <TableHead className="font-semibold">Difficulty</TableHead>
               <TableHead className="text-right font-semibold">
                 Created At
               </TableHead>
