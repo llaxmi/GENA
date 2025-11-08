@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import type { Question, Quiz } from "@/lib/generated/prisma";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface QuizSectionProps {
   questions: Question[];
@@ -20,6 +20,13 @@ export const QuizSection = ({ questions, quizId, quiz }: QuizSectionProps) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const router = useRouter();
+
+  useEffect(() => {
+    if (isCompleted) {
+      router.push(`/quiz/${quizId}/result`);
+    }
+  }, [isCompleted, quizId, router]);
+
   const q = questions[current];
   const selected = answers[current];
   const onSelect = (idx: number) => {
@@ -90,7 +97,7 @@ export const QuizSection = ({ questions, quizId, quiz }: QuizSectionProps) => {
   const answeredCount = answers.filter((a) => a !== null).length;
 
   if (isCompleted) {
-    router.push(`/quiz/${quizId}/result`);
+    return null;
   }
 
   if (!questions.length) {

@@ -25,7 +25,7 @@ function formatDate(dateString?: string | Date) {
   }
 }
 
-export default async function SettingsPage() {
+const SettingsPage = async () => {
   const user = await getUser();
 
   if (!user) {
@@ -110,4 +110,6 @@ export default async function SettingsPage() {
       </Card>
     </div>
   );
-}
+};
+
+export default SettingsPage;

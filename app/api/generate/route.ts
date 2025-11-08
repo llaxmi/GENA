@@ -65,7 +65,7 @@ export async function POST(request: NextRequest) {
   }));
   const quiz = await prisma.quiz.create({
     data: {
-      name: parseResult.data.name || "Untitled Quiz",
+      name: parseResult.data.name,
       userId: session.user?.id,
       numberOfQuestions: parseResult.data.numQuestions,
       difficultyLevel: parseResult.data.difficulty,

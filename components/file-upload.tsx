@@ -43,7 +43,9 @@ const FilePreview: React.FC<FilePreviewProps> = ({ file, onRemove }) => {
         </div>
       )}
       <div className="flex-1 truncate min-w-0">
-        <div className="font-medium text-foreground truncate text-sm">{file.name}</div>
+        <div className="font-medium text-foreground truncate text-sm">
+          {file.name}
+        </div>
         <div className="text-xs text-muted-foreground">
           {(file.size / 1024 / 1024).toFixed(2)} MB
         </div>
@@ -81,8 +83,8 @@ interface ToastProps {
 const Toast: React.FC<ToastProps> = ({ message, type, onClose }) => (
   <div
     className={`fixed top-6 right-6 z-50 px-4 py-3 rounded-lg shadow-lg border animate-fade-in ${
-      type === "success" 
-        ? "bg-green-500/10 dark:bg-green-500/20 border-green-500/20 text-green-700 dark:text-green-400" 
+      type === "success"
+        ? "bg-green-500/10 dark:bg-green-500/20 border-green-500/20 text-green-700 dark:text-green-400"
         : "bg-destructive/10 dark:bg-destructive/20 border-destructive/20 text-destructive"
     }`}
     role="alert"
@@ -246,17 +248,6 @@ export const UploadFile = ({
           };
         })
       );
-
-      // Console log the submitted values
-      console.log("Submitted file contents:", fileContents);
-
-      // Log each file's content for debugging
-      fileContents.forEach((fileContent, index) => {
-        console.log(`\nFile ${index + 1}: ${fileContent.fileName}`);
-        console.log(
-          `Content preview: ${fileContent.content.substring(0, 200)}...`
-        );
-      });
 
       // Simulate upload progress
       const interval = setInterval(() => {
