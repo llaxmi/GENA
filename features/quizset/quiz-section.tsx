@@ -1,6 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import type { Question, Quiz } from "@/lib/generated/prisma";
+import { Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -115,9 +116,13 @@ export const QuizSection = ({ questions, quizId, quiz }: QuizSectionProps) => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6 mt-20">
       {/* Question Navigation Bar */}
-      <div className=" mt-20 p-5 rounded-lg bg-card border border-border shadow-sm">
+      <Button onClick={() => router.push("/dashboard")}>
+        <Home className="w-5 h-5" />
+        Dashboard
+      </Button>
+      <div className="p-5 rounded-lg bg-card border border-border shadow-sm">
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-sm font-semibold text-foreground">
             Questions Progress

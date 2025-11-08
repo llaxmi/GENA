@@ -9,12 +9,13 @@ import { Form, FormField } from "@/components/ui/form";
 import { QuizOptions } from "@/features/generate/quiz-options";
 import {
   documentQuizSchema,
-  DocumentQuizSchemaType,
+  type DocumentQuizSchemaType,
   textQuizSchema,
-  TextQuizSchemaType,
+  type TextQuizSchemaType,
 } from "@/features/generate/schema";
 import { GeneratingQuizModal } from "@/features/quizset";
 import { Quiz } from "@/lib/generated/prisma";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -33,6 +34,7 @@ export default function GeneratePage() {
       difficulty: "easy",
       content: "",
     },
+    resolver: zodResolver(textQuizSchema as any),
   });
 
   const docForm = useForm<DocumentQuizSchemaType>({
@@ -41,30 +43,19 @@ export default function GeneratePage() {
       numQuestions: 3,
       difficulty: "easy",
     },
+    resolver: zodResolver(documentQuizSchema as any),
   });
   const router = useRouter();
 
   const handleTextSubmit = async (data: TextQuizSchemaType) => {
-    // Validate using schema
-    const validationResult = textQuizSchema.safeParse(data);
-    if (!validationResult.success) {
-      const errors = validationResult.error.issues;
-      errors.forEach((error: { message: string }) => {
-        toast.error(error.message);
-      });
-      return;
-    }
-
-    const validatedData = validationResult.data;
-
     setLoading(true);
     try {
       const formDate = new FormData();
       formDate.append("type", "text");
-      formDate.append("name", validatedData.name);
-      formDate.append("content", validatedData.content);
-      formDate.append("numQuestions", validatedData.numQuestions.toString());
-      formDate.append("difficulty", validatedData.difficulty);
+      formDate.append("name", data.name ?? "Untitled");
+      formDate.append("content", data.content);
+      formDate.append("numQuestions", data.numQuestions.toString());
+      formDate.append("difficulty", data.difficulty);
       const response = await fetch("/api/generate", {
         method: "POST",
         body: formDate,
@@ -98,46 +89,31 @@ export default function GeneratePage() {
   };
 
   const handleDocSubmit = async (data: DocumentQuizSchemaType) => {
-    // Validate using schema
-    const validationResult = documentQuizSchema.safeParse(data);
-    if (!validationResult.success) {
-      const errors = validationResult.error.issues;
-      errors.forEach((error: { message: string }) => {
-        toast.error(error.message);
-      });
-      return;
-    }
-
-    const validatedData = validationResult.data;
-
-    // Additional file validations
-    // Validate file type
+    console.log(data);
     const validFileTypes = ["application/pdf", "text/plain"];
     const validExtensions = [".pdf", ".txt"];
-    const fileExtension = validatedData.file.name
+    const fileExtension = data.file.name
       .toLowerCase()
-      .substring(validatedData.file.name.lastIndexOf("."));
+      .substring(data.file.name.lastIndexOf("."));
 
     if (
-      !validFileTypes.includes(validatedData.file.type) &&
+      !validFileTypes.includes(data.file.type) &&
       !validExtensions.includes(fileExtension)
     ) {
       toast.error("Please upload a PDF or TXT file");
       return;
     }
 
-    // Validate file size (5MB limit)
     const maxSize = 5 * 1024 * 1024; // 5MB
-    if (validatedData.file.size > maxSize) {
+    if (data.file.size > maxSize) {
       toast.error("File size must be less than 5MB");
       return;
     }
 
     setLoading(true);
     try {
-      const textContent = await pdfToText(validatedData.file);
+      const textContent = await pdfToText(data.file);
 
-      // Validate extracted content
       if (!textContent || textContent.trim().length < 10) {
         toast.error(
           "The document appears to be empty or contains insufficient content. Please try a different file."
@@ -152,10 +128,10 @@ export default function GeneratePage() {
       formDate.append("content", textContent);
       formDate.append(
         "name",
-        validatedData.name ?? validatedData.file.name.split(".")[0]
+        data.name || data.file.name.split(".pdf")[0] || "Untitled"
       );
-      formDate.append("numQuestions", validatedData.numQuestions.toString());
-      formDate.append("difficulty", validatedData.difficulty);
+      formDate.append("numQuestions", data.numQuestions.toString());
+      formDate.append("difficulty", data.difficulty);
 
       const response = await fetch("/api/generate", {
         method: "POST",

@@ -55,12 +55,8 @@ export default function QuizResult({ quizAnswer }: QuizResultProps) {
   };
 
   return (
-    <div className="p-6 md:p-10 max-w-4xl mx-auto min-h-[85vh]">
-      <Button
-        variant="outline"
-        className="w-full sm:w-auto gap-2  cursor-pointer text-lg bg-gradient-to-r from-blue-600 to-indigo-600 text-white hover:text-white my-4 hover:from-blue-700 hover:to-indigo-700 font-semibold rounded-xl px-8 py-4 shadow transition-all duration-150"
-        onClick={() => router.push("/dashboard")}
-      >
+    <div className="p-6 md:p-10 max-w-4xl mx-auto min-h-[85vh] space-y-6">
+      <Button onClick={() => router.push("/dashboard")}>
         <Home className="w-5 h-5" />
         Dashboard
       </Button>

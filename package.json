@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ai-sdk/google": "^2.0.28",
+    "@hookform/resolvers": "^5.2.2",
     "@prisma/client": "^6.10.1",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-dialog": "^1.1.13",
@@ -28,7 +29,6 @@
     "lucide-react": "^0.509.0",
     "next": "15.3.2",
     "ollama-ai-provider-v2": "^1.5.1",
-    "pdf-parse": "^2.4.5",
     "prisma": "^6.10.1",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",

@@ -55,7 +55,7 @@ class QuizGenerator {
     const messages = await this.getMessageContent(data);
 
     const result = await generateObject({
-      model: ollama.chat("llama3.2:1b"),
+      model: ollama.chat("llama3.1:8b"),
       messages,
       schemaName: "quiz",
       schemaDescription: "A quiz with questions and answers",
