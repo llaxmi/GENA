@@ -137,13 +137,13 @@ export default function GeneratePage() {
                   </div>
                   <div>
                     <label
-                      htmlFor="difficulty"
+                      htmlFor="difficulty-level"
                       className="block mb-2 text-sm font-medium text-gray-700"
                     >
                       Difficulty
                     </label>
                     <select
-                      id="difficulty"
+                      id="difficulty-level"
                       className="w-full p-3 border border-gray-300 rounded-lg text-base text-gray-800 focus:ring-2 focus:ring-blue-300 focus:outline-none"
                     >
                       {["Easy", "Medium", "Hard"].map((d) => (
